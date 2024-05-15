@@ -1,15 +1,18 @@
 import express from "express";
 import { NotFoundError } from "./expressError.js";
-import { add } from "./grocery.js";
+import { Item } from "./models.js";
+import itemRoutes from "/.itemRoutes.js";
 
 const app = express();
+
+// process JSON body => req.body
 app.use(express.json());
+
+// process traditional form data => req.body
 app.use(express.urlencoded());
 
-/** Sample route */
-app.get("/", function (req, res) {
-  return res.send(`2 + 3 = ${add(2, 3)}`);
-});
+// apply a prefix to every route in itemRoutes
+app.use("/items", itemRoutes);
 
 /** Handle 404 errors -- this matches everything */
 app.use(function (req, res, next) {
