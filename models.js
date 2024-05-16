@@ -1,6 +1,6 @@
 // TODO: what kind of errors should we neeeed?
-import { items } from "./fakeDb";
-import { NotFoundError } from "./expressError";
+import { items } from "./fakeDb.js";
+import { NotFoundError } from "./expressError.js";
 
 class Item {
 
@@ -9,17 +9,17 @@ class Item {
 
   /** return a list of items from the fakeDb */
   static getAll() {
-    return cartItems;
+    return this.cartItems;
   }
 
   /** given item name, get the item from the fakeDb */
   static getOne(name) {
 
-    const itemFound = cartItems.filter((cartItem) => {
+    const itemFound = this.cartItems.filter((cartItem) => {
       return cartItem.name === name;
     });
 
-    if (itemFound) {
+    if (itemFound.length > 0) {
       return itemFound;
     }
 
@@ -30,15 +30,18 @@ class Item {
   static add(item) {
     Item.item["name"] = item.name; // TODO: refactor?
     Item.item["price"] = item.price;
-    cartItems.push(item);
+    this.cartItems.push(item);
     return item;
   }
 
   /**  given item object, delete the item from the fakeDb */
-  static delete(item) {
+  static delete(itemData) {
+
+    const item = Item.getOne(item.name); // will throw error if no item found
+
     for (i = 0; i < this.cartItems.length; i++) {
-      if (cartItems[i].name === item.name) {
-        cartItems.splice(i, 1);
+      if (this.cartItems[i].name === itemData.name) {
+        this.cartItems.splice(i, 1);
       }
     }
     return true;
@@ -46,7 +49,7 @@ class Item {
 
   static update(item) {
 
-    const currentItem = getOne(item.name);
+    const currentItem = Item.getOne(item.name);
 
     const newName = item.name;
     const newPrice = item.price;
@@ -57,3 +60,5 @@ class Item {
     return currentItem; //TODO: check if returning new item
   }
 }
+
+export { Item };
