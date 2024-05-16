@@ -1,7 +1,7 @@
 import express from "express";
 import { NotFoundError } from "./expressError.js";
 import { Item } from "./models.js";
-import itemRoutes from "/.itemRoutes.js";
+import itemRoutes from "./routes/items.js";
 
 const app = express();
 
