@@ -1,6 +1,7 @@
 /** Routes for Shopping List app. */
 
 import express from "express";
+import { BadRequestError } from "./expressError.js";
 
 import { Item } from "./models.js";
 
@@ -26,11 +27,36 @@ router.get("/", function (req, res) {
 */
 router.post("/", function (req, res) {
 
-  // access JSON body
+  const newItem = req.body;
 
-  // add item to items list
+  if (!newItem) {
+    throw new BadRequestError("Please enter an item!");
+  }
 
-  // return the item
+  const addedItem = Item.add(newItem);
+  return res.json({ "added": addedItem });
+
 });
+
+router.get("/:name", function (req, res) {
+  const itemName = req.params.name; // FIXME: not entirely sure if it's right?
+  const itemRetrieved = Item.getOne(itemName);
+
+  return res.json(itemRetrieved);
+});
+
+router.patch("/:name", function (req, res) {
+  const itemForUpdate = req.body;
+
+  if (!itemForUpdate) {
+    throw new BadRequestError("Please update an existing item!");
+  }
+
+  const updatedItem = Item.update();
+
+  return res.json({ "updated": updatedItem });
+});
+
+
 
 export default router;

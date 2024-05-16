@@ -14,10 +14,13 @@ class Item {
 
   /** given item name, get the item from the fakeDb */
   static getOne(name) {
-    for (let cartItem in cartItems) {
-      if (cartItem.name === name) {
-        return cartItem;
-      }
+
+    const itemFound = cartItems.filter((cartItem) => {
+      return cartItem.name === name;
+    });
+
+    if (itemFound) {
+      return itemFound;
     }
 
     throw new NotFoundError(`No item ${name}`);
@@ -27,7 +30,8 @@ class Item {
   static add(item) {
     Item.item["name"] = item.name; // TODO: refactor?
     Item.item["price"] = item.price;
-    items.push(item);
+    cartItems.push(item);
+    return item;
   }
 
   /**  given item object, delete the item from the fakeDb */
@@ -40,4 +44,16 @@ class Item {
     return true;
   }
 
+  static update(item) {
+
+    const currentItem = getOne(item.name);
+
+    const newName = item.name;
+    const newPrice = item.price;
+
+    currentItem["name"] = newName || currentItem["name"];
+    currentItem["price"] = newPrice || currentItem["price"];
+
+    return currentItem; //TODO: check if returning new item
+  }
 }
